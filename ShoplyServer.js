@@ -1,3 +1,4 @@
+require('dotenv').config(); // .env 파일에서 환경 변수 로드
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -14,8 +15,8 @@ const {
 } = require('./Product'); // Product.js에서 함수와 모델 가져오기
 
 const app = express();
-const PORT = 3000;
-const mongoURI = 'mongodb://localhost:27017/shoply'; // MongoDB URI
+const PORT = process.env.PORT || 3000; // PORT 환경 변수 사용
+const mongoURI = process.env.MONGODB_URI; // MongoDB URI 환경 변수 사용
 
 // MongoDB 연결
 mongoose.connect(mongoURI, {
@@ -134,7 +135,7 @@ app.put('/products/:id', async (req, res) => {
 // 상품 삭제 API 엔드포인트
 app.delete('/products/:id', async (req, res) => {
     try {
-        const product = await Product.findOneAndDelete({ p_id: req.params.id });
+        const product = await deleteProduct(req.params.id);
         if (product) {
             res.json({ message: '상품 삭제 성공' });
         } else {
