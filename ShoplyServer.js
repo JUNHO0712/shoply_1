@@ -19,10 +19,7 @@ const PORT = process.env.PORT || 3000; // PORT 환경 변수 사용
 const mongoURI = process.env.MONGODB_URI; // MongoDB URI 환경 변수 사용
 
 // MongoDB 연결
-mongoose.connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(mongoURI)
     .then(() => {
         console.log('MongoDB에 연결되었습니다.');
     })
