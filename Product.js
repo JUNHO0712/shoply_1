@@ -3,6 +3,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
+
 // 상품 스키마 정의
 const productSchema = new mongoose.Schema({
     p_id: { type: String, required: true, unique: true }, // 상품 ID
