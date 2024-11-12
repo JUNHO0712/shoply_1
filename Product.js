@@ -23,17 +23,18 @@ const resizeImage = async (inputPath, outputPath) => {
         .toFile(outputPath);
 };
 
-// 상품 추가 함수
 const createProduct = async (p_id, p_name, p_price, p_imgPath, p_content) => {
-    const resizedImgPath = path.join(__dirname, 'resized', `${p_id}.jpg`); // 리사이즈된 이미지 저장 경로
+    const resizedImgPath = path.join(__dirname, 'resized', `${p_id}.jpg`);
+    const imageUrl = `http://localhost:3000/resized/${p_id}.jpg`; // URL 형식으로 저장
 
     // 이미지 리사이즈
     await resizeImage(p_imgPath, resizedImgPath);
 
-    const product = new Product({ p_id, p_name, p_price, p_img: resizedImgPath, p_content });
+    const product = new Product({ p_id, p_name, p_price, p_img: imageUrl, p_content });
     await product.save();
     console.log('상품 추가됨:', product);
 };
+
 
 // 모든 상품 조회 함수
 const getAllProducts = async () => {

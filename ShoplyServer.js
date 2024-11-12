@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path'); // path 모듈 추가
+
 const {
     createProduct,
     getAllProducts,
@@ -36,8 +38,12 @@ mongoose.connect(mongoURI)
     });
 
 // 미들웨어 설정
+app.use('/resized', express.static(path.join(__dirname, 'resized')));
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json({ type: 'application/json; charset=utf-8' }));
+app.use(express.urlencoded({ extended: true, charset: 'utf-8' }));
+
 
 // 사용자 스키마 정의
 const userSchema = new mongoose.Schema({
