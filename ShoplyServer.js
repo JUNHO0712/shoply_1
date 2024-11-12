@@ -14,6 +14,14 @@ const {
     Product // Product 모델 가져오기
 } = require('./Product'); // Product.js에서 함수와 모델 가져오기
 
+const {
+    createCart,
+    getCartWithProductDetails,
+    addToCart,
+    removeFromCart,
+    deleteCart
+} = require('./ShoppingCart'); // ShoppingCart.js 파일에서 가져오기
+
 const app = express();
 const PORT = process.env.PORT || 3000; // PORT 환경 변수 사용
 const mongoURI = process.env.MONGODB_URI; // MongoDB URI 환경 변수 사용
@@ -140,6 +148,66 @@ app.delete('/products/:id', async (req, res) => {
         }
     } catch (error) {
         console.error('상품 삭제 오류:', error);
+        res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+// 장바구니 생성 엔드포인트
+app.post('/shoppingcart', async (req, res) => {
+    const { cart_id, user_id, product_ids } = req.body;
+    try {
+        await createCart(cart_id, user_id, product_ids);
+        res.status(201).json({ message: '장바구니 생성 성공' });
+    } catch (error) {
+        console.error('장바구니 생성 오류:', error);
+        res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+// 사용자 장바구니 조회 엔드포인트 (상품 정보 포함)
+app.get('/shoppingcart/:user_id', async (req, res) => {
+    try {
+        const cartWithDetails = await getCartWithProductDetails(req.params.user_id);
+        if (cartWithDetails) {
+            res.json(cartWithDetails);
+        } else {
+            res.status(404).json({ message: '장바구니를 찾을 수 없습니다.' });
+        }
+    } catch (error) {
+        console.error('장바구니 조회 오류:', error);
+        res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+// 장바구니에 상품 추가 엔드포인트
+app.put('/shoppingcart/:cart_id/add', async (req, res) => {
+    try {
+        const cart = await addToCart(req.params.cart_id, req.body.product_id);
+        res.json({ message: '상품 추가 성공', cart });
+    } catch (error) {
+        console.error('상품 추가 오류:', error);
+        res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+// 장바구니에서 상품 제거 엔드포인트
+app.put('/shoppingcart/:cart_id/remove', async (req, res) => {
+    try {
+        const cart = await removeFromCart(req.params.cart_id, req.body.product_id);
+        res.json({ message: '상품 제거 성공', cart });
+    } catch (error) {
+        console.error('상품 제거 오류:', error);
+        res.status(500).json({ message: '서버 오류' });
+    }
+});
+
+// 장바구니 삭제 엔드포인트
+app.delete('/shoppingcart/:cart_id', async (req, res) => {
+    try {
+        await deleteCart(req.params.cart_id);
+        res.json({ message: '장바구니 삭제 성공' });
+    } catch (error) {
+        console.error('장바구니 삭제 오류:', error);
         res.status(500).json({ message: '서버 오류' });
     }
 });
