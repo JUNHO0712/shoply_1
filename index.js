@@ -12,4 +12,5 @@ const io = new Server(httpServer,{
 require("./utils/io")(io);
 httpServer.listen(process.env.PORT, () => {
     console.log(`서버가 포트 ${process.env.PORT}에서 시작되었습니다.`);
+    console.log("MONGODB_URI:", process.env.MONGODB_URI);
 });
