@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= product.p_name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .product-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .product-container img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .product-info {
+            margin-top: 20px;
+        }
+        .product-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .product-price {
+            font-size: 20px;
+            color: green;
+            margin: 10px 0;
+        }
+        .product-description {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-container">
+        <img src="<%= product.p_img %>" alt="<%= product.p_name %>">
+        <div class="product-info">
+            <h1 class="product-name"><%= product.p_name %></h1>
+            <p class="product-price"><%= product.p_price %> ₩</p>
+            <p class="product-description"><%= product.p_content %></p>
+        </div>
+    </div>
+</body>
+</html>

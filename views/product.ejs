@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -44,13 +44,17 @@
 </head>
 <body>
     <div class="container">
-        <% products.forEach(product => { %>
-            <div class="product">
+    <% products.forEach(product => { %>
+        <div class="product">
+            <!-- 상품 이미지를 클릭하면 상세 페이지로 이동 -->
+            <a href="/product/<%= product.p_id %>/detail">
                 <img src="<%= product.p_img %>" alt="<%= product.p_name %>">
-                <div class="product-name"><%= product.p_name %></div>
-                <div class="product-price"><%= product.p_price %>&#x20A9;</div>
-            </div>
-        <% }); %>
-    </div>
+            </a>
+            <p class="product-name"><%= product.p_name %></p>
+            <p class="product-price"><%= product.p_price %> ₩</p>
+        </div>
+    <% }); %>
+</div>
+
 </body>
 </html>

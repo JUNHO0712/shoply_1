@@ -66,6 +66,23 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// 상품 상세 페이지 라우터 추가
+router.get("/:id/detail", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const product = await Product.findOne({ p_id: id });
+        if (product) {
+            res.render("product-detail", { product }); // EJS로 렌더링
+        } else {
+            res.status(404).send("상품을 찾을 수 없습니다.");
+        }
+    } catch (error) {
+        console.error("상품 상세 조회 오류:", error);
+        res.status(500).send("서버 오류");
+    }
+});
+
 // 상품 수정
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
