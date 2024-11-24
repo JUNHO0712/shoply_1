@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .product {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .product-price {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <% products.forEach(product => { %>
+            <div class="product">
+                <img src="<%= product.p_img %>" alt="<%= product.p_name %>">
+                <div class="product-name"><%= product.p_name %></div>
+                <div class="product-price"><%= product.p_price %>&#x20A9;</div>
+            </div>
+        <% }); %>
+    </div>
+</body>
+</html>
