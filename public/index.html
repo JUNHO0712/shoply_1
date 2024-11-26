@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #messages {
+            list-style: none;
+            padding: 0;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        #messages li {
+            padding: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        img {
+            max-width: 200px;
+            display: block;
+            margin-top: 5px;
+        }
+        #controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        #messageInput, #imageInput, #chatRoomIdInput {
+            flex: 1;
+        }
+        button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Open Chat</h1>
+
+    <div id="roomControls">
+        <input type="text" id="chatRoomIdInput" placeholder="Enter chat room ID" />
+        <button id="joinRoomButton">Join Room</button>
+    </div>
+
+    <ul id="messages"></ul>
+
+    <div id="controls">
+        <input type="text" id="username" placeholder="Enter your username" />
+        <input type="text" id="messageInput" placeholder="Type your message" />
+        <button id="sendButton" disabled>Send</button>
+    </div>
+
+    <div id="controls">
+        <input type="file" id="imageInput" accept="image/*" disabled />
+        <button id="sendImageButton" disabled>Send Image</button>
+    </div>
+
+    <script>
+        const socket = io(); // WebSocket 연결
+        let chatRoomId = null; // 채팅방 ID
+
+        const messages = document.getElementById("messages");
+        const chatRoomIdInput = document.getElementById("chatRoomIdInput");
+        const joinRoomButton = document.getElementById("joinRoomButton");
+        const usernameInput = document.getElementById("username");
+        const messageInput = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const imageInput = document.getElementById("imageInput");
+        const sendImageButton = document.getElementById("sendImageButton");
+
+        // 채팅방 참여
+        joinRoomButton.addEventListener("click", () => {
+            const enteredRoomId = chatRoomIdInput.value.trim();
+            if (enteredRoomId) {
+                chatRoomId = enteredRoomId;
+                socket.emit("joinRoom", chatRoomId);
+                console.log(`Joined room: ${chatRoomId}`);
+                chatRoomIdInput.disabled = true;
+                joinRoomButton.disabled = true;
+                sendButton.disabled = false;
+                imageInput.disabled = false;
+                sendImageButton.disabled = false;
+            }
+        });
+
+        // 메시지 전송
+        sendButton.addEventListener("click", () => {
+            const username = usernameInput.value || "Anonymous";
+            const message = messageInput.value.trim();
+            if (message && chatRoomId) {
+                socket.emit("chatMessage", { chatRoomId, username, message }); // 서버로 메시지 전송
+                
+                messageInput.value = ""; // 입력 필드 초기화
+            }
+        });
+
+        // 메시지 수신
+        socket.on("chatMessage", (data) => {
+            displayMessage(data);
+        });
+
+        // 이미지 전송
+        sendImageButton.addEventListener("click", () => {
+            const file = imageInput.files[0];
+            if (!file || !chatRoomId) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64Image = reader.result.split(",")[1]; // Base64 데이터
+                const username = usernameInput.value || "Anonymous";
+                socket.emit("uploadImage", { chatRoomId, username, image: base64Image }); // 서버로 이미지 전송
+                
+                imageInput.value = ""; // 입력 필드 초기화
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 이미지 수신
+        socket.on("receiveImage", (data) => {
+            displayImage(data);
+        });
+
+        // 메시지 표시 함수
+        function displayMessage(data) {
+            const item = document.createElement("li");
+            item.textContent = `${data.username}: ${data.message}`;
+            messages.appendChild(item);
+        }
+
+        // 이미지 표시 함수
+        function displayImage(data) {
+            const item = document.createElement("li");
+            const img = document.createElement("img");
+            img.src = data.image; // 서버에서 전달된 이미지 경로
+            img.alt = "Uploaded Image";
+            item.textContent = `${data.username} sent an image:`;
+            item.appendChild(img);
+            messages.appendChild(item);
+        }
+    </script>
+</body>
+</html>
