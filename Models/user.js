@@ -24,4 +24,5 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model("User", userSchema);
+// 이미 정의된 모델이 있으면 해당 모델 사용, 없으면 새로 정의
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);
