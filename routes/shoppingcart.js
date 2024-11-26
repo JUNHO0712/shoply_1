@@ -9,7 +9,7 @@ const {
 const router = express.Router();
 
 // 장바구니 생성
-router.post("/", async (req, res) => {
+router.post("/cart", async (req, res) => {
     const { cart_id, user_id, product_ids } = req.body;
 
     try {
