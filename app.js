@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 });
 
 // 홈 경로 설정 (상품 데이터 렌더링)
-app.get("/", async (req, res) => {
+app.get("/product", async (req, res) => {
     try {
         const products = await Product.find(); // 모든 상품 가져오기
         res.render("product", { products }); // EJS 템플릿으로 렌더링
