@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
     res.status(201).send("회원가입 성공");
   } catch (error) {
     console.error("회원가입 오류:", error);
-    res.status(500).send("서버 오류");
+    res.status(500).json({ message: "서버 오류", error: error.message });
   }
 });
 
