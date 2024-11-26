@@ -1,4 +1,4 @@
-const express = require("express");
+ï»¿const express = require("express");
 const {
     createCart,
     getCartWithProductDetails,
@@ -8,64 +8,64 @@ const {
 } = require("../models/ShoppingCart");
 const router = express.Router();
 
-// Àå¹Ù±¸´Ï »ý¼º
+// ìž¥ë°”êµ¬ë‹ˆ ìƒì„±
 router.post("/cart", async (req, res) => {
-    const { cart_id, user_id, product_ids } = req.body;
+    const { cart_id, username, product_ids } = req.body;
 
     try {
-        await createCart(cart_id, user_id, product_ids);
-        res.status(201).json({ message: "Àå¹Ù±¸´Ï »ý¼º ¼º°ø" });
+        await createCart(cart_id, username, product_ids);
+        res.status(201).json({ message: "ìž¥ë°”êµ¬ë‹ˆ ìƒì„± ì„±ê³µ" });
     } catch (error) {
-        console.error("Àå¹Ù±¸´Ï »ý¼º ¿À·ù:", error);
-        res.status(500).json({ message: "¼­¹ö ¿À·ù", error: error.message });
+        console.error("ìž¥ë°”êµ¬ë‹ˆ ìƒì„± ì˜¤ë¥˜:", error);
+        res.status(500).json({ message: "ì„œë²„ ì˜¤ë¥˜", error: error.message });
     }
 });
 
-// »ç¿ëÀÚ Àå¹Ù±¸´Ï Á¶È¸
+// ì‚¬ìš©ìž ìž¥ë°”êµ¬ë‹ˆ ì¡°íšŒ
 router.get("/:user_id", async (req, res) => {
     try {
-        const cartWithDetails = await getCartWithProductDetails(req.params.user_id);
+        const cartWithDetails = await getCartWithProductDetails(req.params.username);
         if (cartWithDetails) {
             res.status(200).json(cartWithDetails);
         } else {
-            res.status(404).json({ message: "Àå¹Ù±¸´Ï¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù." });
+            res.status(404).json({ message: "ìž¥ë°”êµ¬ë‹ˆë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤." });
         }
     } catch (error) {
-        console.error("Àå¹Ù±¸´Ï Á¶È¸ ¿À·ù:", error);
-        res.status(500).json({ message: "¼­¹ö ¿À·ù", error: error.message });
+        console.error("ìž¥ë°”êµ¬ë‹ˆ ì¡°íšŒ ì˜¤ë¥˜:", error);
+        res.status(500).json({ message: "ì„œë²„ ì˜¤ë¥˜", error: error.message });
     }
 });
 
-// Àå¹Ù±¸´Ï¿¡ »óÇ° Ãß°¡
+// ìž¥ë°”êµ¬ë‹ˆì— ìƒí’ˆ ì¶”ê°€
 router.put("/:cart_id/add", async (req, res) => {
     try {
         const cart = await addToCart(req.params.cart_id, req.body.product_id);
-        res.status(200).json({ message: "»óÇ° Ãß°¡ ¼º°ø", cart });
+        res.status(200).json({ message: "ìƒí’ˆ ì¶”ê°€ ì„±ê³µ", cart });
     } catch (error) {
-        console.error("»óÇ° Ãß°¡ ¿À·ù:", error);
-        res.status(500).json({ message: "¼­¹ö ¿À·ù", error: error.message });
+        console.error("ìƒí’ˆ ì¶”ê°€ ì˜¤ë¥˜:", error);
+        res.status(500).json({ message: "ì„œë²„ ì˜¤ë¥˜", error: error.message });
     }
 });
 
-// Àå¹Ù±¸´Ï¿¡¼­ »óÇ° Á¦°Å
+// ìž¥ë°”êµ¬ë‹ˆì—ì„œ ìƒí’ˆ ì œê±°
 router.put("/:cart_id/remove", async (req, res) => {
     try {
         const cart = await removeFromCart(req.params.cart_id, req.body.product_id);
-        res.status(200).json({ message: "»óÇ° Á¦°Å ¼º°ø", cart });
+        res.status(200).json({ message: "ìƒí’ˆ ì œê±° ì„±ê³µ", cart });
     } catch (error) {
-        console.error("»óÇ° Á¦°Å ¿À·ù:", error);
-        res.status(500).json({ message: "¼­¹ö ¿À·ù", error: error.message });
+        console.error("ìƒí’ˆ ì œê±° ì˜¤ë¥˜:", error);
+        res.status(500).json({ message: "ì„œë²„ ì˜¤ë¥˜", error: error.message });
     }
 });
 
-// Àå¹Ù±¸´Ï »èÁ¦
+// ìž¥ë°”êµ¬ë‹ˆ ì‚­ì œ
 router.delete("/:cart_id", async (req, res) => {
     try {
         await deleteCart(req.params.cart_id);
-        res.status(200).json({ message: "Àå¹Ù±¸´Ï »èÁ¦ ¼º°ø" });
+        res.status(200).json({ message: "ìž¥ë°”êµ¬ë‹ˆ ì‚­ì œ ì„±ê³µ" });
     } catch (error) {
-        console.error("Àå¹Ù±¸´Ï »èÁ¦ ¿À·ù:", error);
-        res.status(500).json({ message: "¼­¹ö ¿À·ù", error: error.message });
+        console.error("ìž¥ë°”êµ¬ë‹ˆ ì‚­ì œ ì˜¤ë¥˜:", error);
+        res.status(500).json({ message: "ì„œë²„ ì˜¤ë¥˜", error: error.message });
     }
 });
 

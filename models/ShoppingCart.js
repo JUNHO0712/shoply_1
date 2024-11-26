@@ -1,55 +1,55 @@
-const mongoose = require("mongoose");
+ï»¿const mongoose = require("mongoose");
 
-// Àå¹Ù±¸´Ï ½ºÅ°¸¶ Á¤ÀÇ
+// ì¥ë°”êµ¬ë‹ˆ ìŠ¤í‚¤ë§ˆ ì •ì˜
 const shoppingCartSchema = new mongoose.Schema({
-    cart_id: { type: String, required: true, unique: true }, // Àå¹Ù±¸´Ï ID
-    user_id: { type: String, required: true }, // »ç¿ëÀÚ ID
-    product_ids: { type: [String], required: true }, // »óÇ° ID ¹è¿­
+    cart_id: { type: String, required: true, unique: true }, // ì¥ë°”êµ¬ë‹ˆ ID
+    username: { type: String, required: true }, // ì‚¬ìš©ì ì´ë¦„
+    product_ids: { type: [String], required: true }, // ìƒí’ˆ ID ë°°ì—´
 });
 
-// Àå¹Ù±¸´Ï ¸ğµ¨ »ı¼º
+// ì¥ë°”êµ¬ë‹ˆ ëª¨ë¸ ìƒì„±
 const ShoppingCart = mongoose.model("ShoppingCart", shoppingCartSchema);
 
-// Àå¹Ù±¸´Ï »ı¼º ÇÔ¼ö
-const createCart = async (cart_id, user_id, product_ids) => {
-    const cart = new ShoppingCart({ cart_id, user_id, product_ids });
+// ì¥ë°”êµ¬ë‹ˆ ìƒì„± í•¨ìˆ˜
+const createCart = async (cart_id, username, product_ids) => {
+    const cart = new ShoppingCart({ cart_id, username, product_ids });
     await cart.save();
-    console.log("Àå¹Ù±¸´Ï »ı¼ºµÊ:", cart);
+    console.log("ì¥ë°”êµ¬ë‹ˆ ìƒì„±ë¨:", cart);
 };
 
-// Àå¹Ù±¸´Ï Á¶È¸ (»óÇ° Á¤º¸ Æ÷ÇÔ)
-const getCartWithProductDetails = async (user_id) => {
-    const cart = await ShoppingCart.findOne({ user_id }).lean();
+// ì¥ë°”êµ¬ë‹ˆ ì¡°íšŒ (ìƒí’ˆ ì •ë³´ í¬í•¨)
+const getCartWithProductDetails = async (username) => {
+    const cart = await ShoppingCart.findOne({ username }).lean();
     if (!cart) return null;
 
-    // »óÇ° Á¤º¸¸¦ º´ÇÕ (°¡Á¤: Product ¸ğµ¨ÀÌ º°µµ·Î Á¸Àç)
+    // ìƒí’ˆ ì •ë³´ë¥¼ ë³‘í•© (ê°€ì •: Product ëª¨ë¸ì´ ë³„ë„ë¡œ ì¡´ì¬)
     const Product = require("./Product");
     const products = await Product.find({ p_id: { $in: cart.product_ids } }).lean();
     return { ...cart, products };
 };
 
-// Àå¹Ù±¸´Ï¿¡ »óÇ° Ãß°¡
+// ì¥ë°”êµ¬ë‹ˆì— ìƒí’ˆ ì¶”ê°€
 const addToCart = async (cart_id, product_id) => {
     const cart = await ShoppingCart.findOne({ cart_id });
-    if (!cart) throw new Error("Àå¹Ù±¸´Ï¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+    if (!cart) throw new Error("ì¥ë°”êµ¬ë‹ˆë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
     cart.product_ids.push(product_id);
     await cart.save();
     return cart;
 };
 
-// Àå¹Ù±¸´Ï¿¡¼­ »óÇ° Á¦°Å
+// ì¥ë°”êµ¬ë‹ˆì—ì„œ ìƒí’ˆ ì œê±°
 const removeFromCart = async (cart_id, product_id) => {
     const cart = await ShoppingCart.findOne({ cart_id });
-    if (!cart) throw new Error("Àå¹Ù±¸´Ï¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+    if (!cart) throw new Error("ì¥ë°”êµ¬ë‹ˆë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
     cart.product_ids = cart.product_ids.filter((id) => id !== product_id);
     await cart.save();
     return cart;
 };
 
-// Àå¹Ù±¸´Ï »èÁ¦
+// ì¥ë°”êµ¬ë‹ˆ ì‚­ì œ
 const deleteCart = async (cart_id) => {
     const result = await ShoppingCart.findOneAndDelete({ cart_id });
-    console.log("Àå¹Ù±¸´Ï »èÁ¦µÊ:", result);
+    console.log("ì¥ë°”êµ¬ë‹ˆ ì‚­ì œë¨:", result);
     return result;
 };
 
