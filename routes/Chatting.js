@@ -1,5 +1,5 @@
 const express = require("express");
-const Chat = require("../Models/chat");
+const Chat = require("../models/chat");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");

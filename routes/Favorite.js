@@ -1,5 +1,5 @@
 const express = require("express");
-const Favorite = require("../Models/favorite");
+const Favorite = require("../models/favorite");
 const router = express.Router();
 
 // 즐겨찾기 추가

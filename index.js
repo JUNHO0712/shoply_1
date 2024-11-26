@@ -52,7 +52,7 @@ mongoose
         fs.writeFileSync(filePath, buffer);
   
         // MongoDB에 저장 (선택 사항)
-        const Chat = require("./Models/chat");
+        const Chat = require("./models/chat");
         const chat = new Chat({
           chatRoomId,
           username: socket.id, // 사용자 ID

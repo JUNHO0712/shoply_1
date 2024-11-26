@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const User = require("../Models/user"); // User 모델 가져오기
+const User = require("../models/user"); // User 모델 가져오기
 
 const router = express.Router();
 
