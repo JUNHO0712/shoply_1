@@ -13,11 +13,13 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST","DELETE"],
 
   },
 });
 
+const chattingHandler = require("./routes/Chatting")(io);
+app.use("/chat", chattingHandler);
 // MongoDB 연결
 const mongoURI = process.env.MONGODB_URI;
 if (!mongoURI) {
@@ -29,6 +31,7 @@ mongoose
     .connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      maxPoolSize: 10, // 연결 풀 크기 설정
     })
     .then(() => console.log("MongoDB 연결 성공"))
     .catch((err) => console.error("MongoDB 연결 오류:", err));
@@ -54,20 +57,20 @@ io.on("connection", (socket) => {
   });
 
   // 이미지 업로드 이벤트
-  socket.on("uploadImage", ({ chatRoomId, username, image }) => {
-    try {
-      const buffer = Buffer.from(image, "base64");
-      const filePath = `uploads/${Date.now()}.png`;
-      fs.writeFileSync(filePath, buffer);
+  // socket.on("uploadImage", ({ chatRoomId, username, image }) => {
+  //   try {
+  //     const buffer = Buffer.from(image, "base64");
+  //     const filePath = `uploads/${Date.now()}.png`;
+  //     fs.writeFileSync(filePath, buffer);
 
-      io.to(chatRoomId).emit("receiveImage", {
-        username,
-        image: `/${filePath}`,
-      });
-    } catch (err) {
-      console.error("이미지 업로드 오류:", err);
-    }
-  });
+  //     io.to(chatRoomId).emit("receiveImage", {
+  //       username,
+  //       image: `/${filePath}`,
+  //     });
+  //   } catch (err) {
+  //     console.error("이미지 업로드 오류:", err);
+  //   }
+  // });
 
   // 연결 해제 이벤트
   socket.on("disconnect", () => {

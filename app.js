@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 // 라우터 및 모델 가져오기
-
+const Product = require("./models/Product");
 const loginRoutes = require("./routes/Login2");
 const chatRoutes = require("./routes/Chatting");
 const favoriteRoutes = require("./routes/Favorite");
@@ -56,8 +56,8 @@ app.get("/product", async (req, res) => {
 // 라우터 연결
 app.use("/product", productRoutes);
 app.use("/shoppingcart", shoppingCartRoutes);
-app.use("/auth", loginRoutes);
+app.use("/login", loginRoutes);
 app.use("/chat", chatRoutes);
-app.use("/favorites", favoriteRoutes);
+app.use("/favorite", favoriteRoutes);
 
 module.exports = app;

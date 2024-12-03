@@ -39,6 +39,7 @@ module.exports = (io) => {
         
                 // 방에 메시지 브로드캐스트
                 io.to(chatRoomId).emit("chatMessage", { username, message });
+                console.log("메시지 저장 성공:", chat);
             } catch (error) {
                 console.error("메시지 저장 오류:", error);
             }
@@ -57,7 +58,9 @@ module.exports = (io) => {
                 const buffer = Buffer.from(image, "base64");
                 const filePath = `uploads/${Date.now()}.png`;
                 fs.writeFileSync(filePath, buffer);
-        
+                console.log("이미지 업로드 요청 받음:");
+                console.log(`방 ID: ${chatRoomId}`);
+                console.log(`이미지 경로: ${filePath}`);
                 const chat = new Chat({
                     chatRoomId, // 방 ID
                     username: socket.user?.id || socket.id, // 사용자 이름 (로그인 안 됐으면 socket ID)
@@ -70,6 +73,7 @@ module.exports = (io) => {
                     username: socket.user?.id || socket.id,
                     image: `/${filePath}`,
                 });
+                console.log("이미지 저장 성공:", chat);
             } catch (err) {
                 console.error("이미지 업로드 오류:", err);
             }

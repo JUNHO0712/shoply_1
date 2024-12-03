@@ -14,12 +14,14 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password: hashedPassword,
+     
+      
     });
     await user.save();
     res.status(201).send("회원가입 성공");
   } catch (error) {
     console.error("회원가입 오류:", error);
-    res.status(500).json({ message: "서버 오류", error: error.message });
+    res.status(500).send("서버 오류");
   }
 });
 
