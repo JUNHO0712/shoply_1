@@ -12,6 +12,7 @@ const chatRoutes = require("./routes/Chatting");
 const favoriteRoutes = require("./routes/Favorite");
 const productRoutes = require("./routes/product");
 const shoppingCartRoutes = require("./routes/shoppingcart");
+const Product = require("./models/Product");
 
 
 const app = express();
