@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 // 라우터 및 모델 가져오기
-const Product = require("./models/Product");
+
 const loginRoutes = require("./routes/Login2");
 const chatRoutes = require("./routes/Chatting");
 const favoriteRoutes = require("./routes/Favorite");
